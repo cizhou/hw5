@@ -48,7 +48,7 @@ bool schedule(
     // avail = rows x col (days x workers)
     size_t numDays = avail.size();
     size_t numWorkers = avail[0].size();
-
+    
     // sched rows x col (days x dailyNeed)
     for (unsigned int i = 0; i < numDays; i++)
     {
@@ -89,18 +89,17 @@ bool scheduleHelper(
         {
             sched[day].push_back(i);
             shiftCount[i]++;
-
             // CONDITION 3: only move onto the next day if current day has enough workers 
+            // RECURSE: to next day
             if (workers + 1 == dailyNeed) 
             {
                 return scheduleHelper(avail, dailyNeed, maxShifts, sched, shiftCount, day + 1, 0);
             }
-            // All options to get to the end of the day
+            // RECURSE: to next worker
             if (scheduleHelper(avail, dailyNeed, maxShifts, sched, shiftCount, day, workers + 1))
             {
                 return true;
             }
-
             // BACKTRACK
             sched[day].pop_back();
             shiftCount[i]--;
